@@ -44,5 +44,6 @@ This project uses a **Non-deterministic Finite Automaton (NFA)** to validate the
 
 ---
 
-## 👨‍💻 Author
-- Developed as part of a C++ Theory of Automata and Formal Language course project
+## 👩🏻‍💻 Author
+
+Developed as part of a C++ Theory of Automata and Formal Language course project
