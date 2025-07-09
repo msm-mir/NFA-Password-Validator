@@ -1,37 +1,8 @@
 #include <iostream>
-#include <set>
-#include <vector>
+#include <nfa.h>
+#include <TransitionType.h>
 
 using namespace std;
-
-enum TransitionType {
-    a_z, A_Z, n0_9, s_char
-};
-
-enum StateType {
-    q0, q1, q2, q3, q4
-};
-
-class State {
-public:
-    multiset<StateType> name;
-
-    State();
-    bool operator<(const State& s) const;
-    bool operator==(const State& s) const;
-};
-
-class NFA {
-public:
-    vector<State> states;
-    vector<State> currentStates;
-    vector<State> nextStates;
-    vector<TransitionType> transitions;
-    State firstState;
-    State finalState;
-
-    NFA();
-};
 
 void buildNFA(NFA&, int&, int&, int&, int&);
 void buildStartStates(NFA&, int&, int&, int&, int&);
@@ -88,12 +59,12 @@ void buildStartStates(NFA& machine, int& lowerCase, int& upperCase, int& number,
         machine.states.push_back(s2);
         machine.currentStates.push_back(s1);
         machine.nextStates.push_back(s2);
-        machine.transitions.push_back(a_z);
+        machine.transitions.push_back(TransitionType::a_z);
         s2.name.clear();
     } else {
         machine.currentStates.push_back(s1);
         machine.nextStates.push_back(s1);
-        machine.transitions.push_back(a_z);
+        machine.transitions.push_back(TransitionType::a_z);
     }
 
     if (upperCase != 0) {
@@ -101,12 +72,12 @@ void buildStartStates(NFA& machine, int& lowerCase, int& upperCase, int& number,
         machine.states.push_back(s2);
         machine.currentStates.push_back(s1);
         machine.nextStates.push_back(s2);
-        machine.transitions.push_back(A_Z);
+        machine.transitions.push_back(TransitionType::A_Z);
         s2.name.clear();
     } else {
         machine.currentStates.push_back(s1);
         machine.nextStates.push_back(s1);
-        machine.transitions.push_back(A_Z);
+        machine.transitions.push_back(TransitionType::A_Z);
     }
 
     if (number != 0) {
@@ -114,12 +85,12 @@ void buildStartStates(NFA& machine, int& lowerCase, int& upperCase, int& number,
         machine.states.push_back(s2);
         machine.currentStates.push_back(s1);
         machine.nextStates.push_back(s2);
-        machine.transitions.push_back(n0_9);
+        machine.transitions.push_back(TransitionType::n0_9);
         s2.name.clear();
     } else {
         machine.currentStates.push_back(s1);
         machine.nextStates.push_back(s1);
-        machine.transitions.push_back(n0_9);
+        machine.transitions.push_back(TransitionType::n0_9);
     }
 
     if (specialChar != 0) {
@@ -127,11 +98,11 @@ void buildStartStates(NFA& machine, int& lowerCase, int& upperCase, int& number,
         machine.states.push_back(s2);
         machine.currentStates.push_back(s1);
         machine.nextStates.push_back(s2);
-        machine.transitions.push_back(s_char);
+        machine.transitions.push_back(TransitionType::s_char);
     } else {
         machine.currentStates.push_back(s1);
         machine.nextStates.push_back(s1);
-        machine.transitions.push_back(s_char);
+        machine.transitions.push_back(TransitionType::s_char);
     }
 }
 
@@ -144,7 +115,7 @@ void buildOtherStates(NFA &machine, int &lowerCase, int &upperCase, int &number,
             machine.currentStates.push_back(s);
             s.name.insert(q1);
             machine.nextStates.push_back(s);
-            machine.transitions.push_back(a_z);
+            machine.transitions.push_back(TransitionType::a_z);
 
             if (isNew(machine, s))
                 machine.states.push_back(s);
@@ -155,14 +126,14 @@ void buildOtherStates(NFA &machine, int &lowerCase, int &upperCase, int &number,
         } else {
             machine.currentStates.push_back(s);
             machine.nextStates.push_back(s);
-            machine.transitions.push_back(a_z);
+            machine.transitions.push_back(TransitionType::a_z);
         }
 
         if (upperCase != 0 && notDuplicate(s, q2, upperCase)) {
             machine.currentStates.push_back(s);
             s.name.insert(q2);
             machine.nextStates.push_back(s);
-            machine.transitions.push_back(A_Z);
+            machine.transitions.push_back(TransitionType::A_Z);
 
             if (isNew(machine, s))
                 machine.states.push_back(s);
@@ -173,14 +144,14 @@ void buildOtherStates(NFA &machine, int &lowerCase, int &upperCase, int &number,
         } else {
             machine.currentStates.push_back(s);
             machine.nextStates.push_back(s);
-            machine.transitions.push_back(A_Z);
+            machine.transitions.push_back(TransitionType::A_Z);
         }
 
         if (number != 0 && notDuplicate(s, q3, number)) {
             machine.currentStates.push_back(s);
             s.name.insert(q3);
             machine.nextStates.push_back(s);
-            machine.transitions.push_back(n0_9);
+            machine.transitions.push_back(TransitionType::n0_9);
 
             if (isNew(machine, s))
                 machine.states.push_back(s);
@@ -191,14 +162,14 @@ void buildOtherStates(NFA &machine, int &lowerCase, int &upperCase, int &number,
         } else {
             machine.currentStates.push_back(s);
             machine.nextStates.push_back(s);
-            machine.transitions.push_back(n0_9);
+            machine.transitions.push_back(TransitionType::n0_9);
         }
 
         if (specialChar != 0 && notDuplicate(s, q4, specialChar)) {
             machine.currentStates.push_back(s);
             s.name.insert(q4);
             machine.nextStates.push_back(s);
-            machine.transitions.push_back(s_char);
+            machine.transitions.push_back(TransitionType::s_char);
 
             if (isNew(machine, s))
                 machine.states.push_back(s);
@@ -209,7 +180,7 @@ void buildOtherStates(NFA &machine, int &lowerCase, int &upperCase, int &number,
         } else {
             machine.currentStates.push_back(s);
             machine.nextStates.push_back(s);
-            machine.transitions.push_back(s_char);
+            machine.transitions.push_back(TransitionType::s_char);
         }
     }
     s.name.clear();
@@ -278,28 +249,28 @@ void traverse(NFA& machine, string& pass) {
     for (char c : pass) {
         if (c >= 'a' && c <= 'z') {
             for (size_t i = 0; i < machine.currentStates.size(); i++) {
-                if (machine.transitions[i] == a_z && machine.currentStates[i] == s) {
+                if (machine.transitions[i] == TransitionType::a_z && machine.currentStates[i] == s) {
                     s = machine.nextStates[i];
                     break;
                 }
             }
         } else if (c >= 'A' && c <= 'Z') {
             for (size_t i = 0; i < machine.currentStates.size(); i++) {
-                if (machine.transitions[i] == A_Z && machine.currentStates[i] == s) {
+                if (machine.transitions[i] == TransitionType::A_Z && machine.currentStates[i] == s) {
                     s = machine.nextStates[i];
                     break;
                 }
             }
         } else if (c >= '0' && c <= '9') {
             for (size_t i = 0; i < machine.currentStates.size(); i++) {
-                if (machine.transitions[i] == n0_9 && machine.currentStates[i] == s) {
+                if (machine.transitions[i] == TransitionType::n0_9 && machine.currentStates[i] == s) {
                     s = machine.nextStates[i];
                     break;
                 }
             }
         } else {
             for (size_t i = 0; i < machine.currentStates.size(); i++) {
-                if (machine.transitions[i] == s_char && machine.currentStates[i] == s) {
+                if (machine.transitions[i] == TransitionType::s_char && machine.currentStates[i] == s) {
                     s = machine.nextStates[i];
                     break;
                 }
@@ -333,10 +304,10 @@ string toString1(State &s) {
 
 string toString2(TransitionType &t) {
     string out;
-    if (t == a_z) out = "a-z";
-    else if (t == A_Z) out = "A-Z";
-    else if (t == n0_9) out = "0-9";
-    else if (t == s_char) out = "#!@";
+    if (t == TransitionType::a_z) out = "a-z";
+    else if (t == TransitionType::A_Z) out = "A-Z";
+    else if (t == TransitionType::n0_9) out = "0-9";
+    else if (t == TransitionType::s_char) out = "#!@";
     return out;
 }
 
@@ -361,23 +332,4 @@ void transferTable(NFA &machine) {
         printf("%5s", " ");
     }
     printf("\n\n\n\n");
-}
-
-State::State() = default;
-
-NFA::NFA() {
-    this->states.clear();
-    this->currentStates.clear();
-    this->nextStates.clear();
-    this->transitions.clear();
-    this->firstState = State();
-    this->finalState = State();
-}
-
-bool State::operator<(const State& s) const {
-    return this->name < s.name;
-}
-
-bool State::operator==(const State& s) const {
-    return this->name == s.name;
 }
