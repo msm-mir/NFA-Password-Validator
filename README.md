@@ -34,16 +34,3 @@ This project uses a **Non-deterministic Finite Automaton (NFA)** to validate the
 ├── State.h / .cpp
 └── README.md
 ```
-
----
-
-## 🚀 How to Run
-
-- Make sure the compiler is set to support C++17 or later
-- Run the program in a terminal or console window for better visibility of the output
-
----
-
-## 👩🏻‍💻 Author
-
-Developed as part of a C++ Theory of Automata and Formal Language course project
